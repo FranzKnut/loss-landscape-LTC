@@ -76,7 +76,7 @@ def reduce_max(comm, array, display_info=False):
         cols = str(comm.gather(array.shape[1]))
         print_once(comm, "reduce: %s, %s"%(rows, cols))
 
-    comm.Reduce(array, total, op=mpi4py.MPI.MAX, root=0)
+    comm.Reduce([array, mpi4py.MPI.FLOAT], [total, mpi4py.MPI.FLOAT], op=mpi4py.MPI.MAX, root=0)
     return total
 
 def reduce_min(comm, array, display_info=False):

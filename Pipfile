@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+torch = "*"
+torchvision = "*"
+h5py = "<3"
+mpi4py = "*"
+scikit-learn = "*"
+matplotlib = "*"
+seaborn = "*"
+sampleproject = { editable = true, path = "./../LTC_pytorch" }
+
+[dev-packages]
+
+[requires]
+python_version = "3.8"
