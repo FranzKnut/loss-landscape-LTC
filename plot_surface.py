@@ -33,7 +33,7 @@ def name_surface_file(args, dir_file):
 
     # use args.dir_file as the perfix
     # surf_file = dir_file
-    surf_file = os.path.join("output", args.dataset, args.model)
+    surf_file = os.path.join("output", args.dataset, args.model, args.model_size)
     os.makedirs(surf_file, exist_ok=True)
 
     # resolution
@@ -117,6 +117,7 @@ def crunch(surf_file, net, w, s, d, dataloader, loss_key, acc_key, comm, rank, a
             trainer = pl.Trainer(logger=False, gpus=[torch.cuda.current_device()] if args.cuda else None)
             if args.cuda:
                 net.cuda()
+                # net.model[0] = net.model[0].graphed(net.batch_size, net.data.seq_len)
 
         # Loop over all uncalculated loss values
         for count, ind in enumerate(inds):
@@ -182,7 +183,7 @@ if __name__ == '__main__':
     parser.add_argument('--batch_size', default=128, type=int, help='minibatch size')
 
     # data parameters
-    parser.add_argument('--dataset', default='hopper', help='cifar10 | imagenet')
+    parser.add_argument('--dataset', default='cheetah', help='cifar10 | imagenet')
     parser.add_argument('--datapath', default='cifar10/data', metavar='DIR', help='path to the dataset')
     parser.add_argument('--raw_data', action='store_true', default=False, help='no data preprocessing')
     parser.add_argument('--data_split', default=1, type=int, help='the number of splits for the dataloader')
@@ -192,6 +193,7 @@ if __name__ == '__main__':
 
     # model parameters
     parser.add_argument('--model', default='resnet56', help='model name')
+    parser.add_argument('--model_size', default=32, help='model size')
     parser.add_argument('--model_folder', default='', help='the common folder that contains model_file and model_file2')
     parser.add_argument('--model_file', default='', help='path to the trained model file')
     parser.add_argument('--model_file2', default='', help='use (model_file2 - model_file) as the xdirection')

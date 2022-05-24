@@ -11,7 +11,7 @@ mpi4py = "*"
 scikit-learn = "*"
 matplotlib = "*"
 seaborn = "*"
-sampleproject = { editable = true, path = "./../LTC_pytorch" }
+ltc-pytorch = { editable = true, path = "./../LTC_pytorch", git = "https://github.com/FranzKnut/loss-landscape-LTC.git" }
 
 [dev-packages]
 

@@ -66,15 +66,15 @@ def reduce_max(comm, array, display_info=False):
     if not comm:
         return array
     array = np.asarray(array, dtype='d')
-    total = np.zeros_like(array)
-    float_min = np.finfo(np.float).min
-    total.fill(float_min)
+    total = -np.ones_like(array)
+    # float_min = np.finfo(np.float).min
+    # total.fill(float_min)
 
     if display_info:
-        print ("(%d): sum=%f : size=%d"%(get_rank(comm), np.sum(array), array.nbytes))
+        print("(%d): sum=%f : size=%d" % (get_rank(comm), np.sum(array), array.nbytes))
         rows = str(comm.gather(array.shape[0]))
         cols = str(comm.gather(array.shape[1]))
-        print_once(comm, "reduce: %s, %s"%(rows, cols))
+        print_once(comm, "reduce: %s, %s" % (rows, cols))
 
     comm.Reduce([array, mpi4py.MPI.FLOAT], [total, mpi4py.MPI.FLOAT], op=mpi4py.MPI.MAX, root=0)
     return total

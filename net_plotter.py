@@ -238,7 +238,7 @@ def setup_direction(args, dir_file, net):
     if exists(dir_file):
         with h5py.File(dir_file, 'r') as f:
             if (args.y and 'ydirection' in f.keys()) or 'xdirection' in f.keys():
-                print("%s is already setted up" % dir_file)
+                print("%s is already set up" % dir_file)
                 return
 
     # Create the plotting directions
@@ -273,7 +273,7 @@ def name_direction_file(args):
         return args.dir_file
 
     # dir_file = ""
-    dir_file = os.path.join("output", args.dataset, args.model)
+    dir_file = os.path.join("output", args.dataset, args.model, args.model_size)
     os.makedirs(dir_file, exist_ok=True)
 
     file1, file2, file3 = args.model_file, args.model_file2, args.model_file3
