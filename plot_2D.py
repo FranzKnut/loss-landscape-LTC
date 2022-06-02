@@ -1,6 +1,8 @@
 """
     2D plotting funtions
 """
+import os
+import re
 
 from mpl_toolkits.mplot3d import Axes3D
 from matplotlib import pyplot as plt
@@ -10,6 +12,8 @@ import argparse
 import numpy as np
 from os.path import exists
 import seaborn as sns
+
+from eval.eval_config import get_replace_dict
 
 
 def plot_2d_contour(surf_file, surf_name='train_loss', vmin=0.1, vmax=10, vlevel=0.5, show=False):
@@ -42,6 +46,10 @@ def plot_2d_contour(surf_file, surf_name='train_loss', vmin=0.1, vmax=10, vlevel
         print('The length of coordinates is not enough for plotting contours')
         return
 
+    names = surf_file.split(os.sep)[1:-1]
+    for word, replacement in get_replace_dict().items():
+        names[1] = re.sub(word, replacement, names[1])
+    title = " ".join(names)
     # --------------------------------------------------------------------
     # Plot 2D contours
     # --------------------------------------------------------------------
@@ -54,6 +62,7 @@ def plot_2d_contour(surf_file, surf_name='train_loss', vmin=0.1, vmax=10, vlevel
     fig = plt.figure()
     print(surf_file + '_' + surf_name + '_2dcontourf' + '.pdf')
     CS = plt.contourf(X, Y, Z, cmap='summer', levels=np.arange(vmin, vmax, vlevel))
+    plt.title(title)
     fig.savefig(surf_file + '_' + surf_name + '_2dcontourf' + '.pdf', dpi=300,
                 bbox_inches='tight', format='pdf')
 
@@ -64,6 +73,7 @@ def plot_2d_contour(surf_file, surf_name='train_loss', vmin=0.1, vmax=10, vlevel
     sns_plot = sns.heatmap(Z, cmap='viridis', cbar=True, vmin=vmin, vmax=vmax,
                            xticklabels=False, yticklabels=False)
     sns_plot.invert_yaxis()
+    plt.title(title)
     sns_plot.get_figure().savefig(surf_file + '_' + surf_name + '_2dheat.pdf',
                                   dpi=300, bbox_inches='tight', format='pdf')
 
@@ -74,6 +84,7 @@ def plot_2d_contour(surf_file, surf_name='train_loss', vmin=0.1, vmax=10, vlevel
     ax = Axes3D(fig)
     surf = ax.plot_surface(X, Y, Z, cmap=cm.coolwarm, linewidth=0, antialiased=False)
     fig.colorbar(surf, shrink=0.5, aspect=5)
+    plt.title(title)
     fig.savefig(surf_file + '_' + surf_name + '_3dsurface.pdf', dpi=300,
                 bbox_inches='tight', format='pdf')
 
@@ -190,10 +201,9 @@ if __name__ == '__main__':
     parser.add_argument('--dir_file', default='', help='The h5 file that contains directions')
     parser.add_argument('--proj_file', default='', help='The h5 file that contains the projected trajectories')
     parser.add_argument('--surf_name', default='train_loss', help='The type of surface to plot')
-    parser.add_argument('--vmax', default=10, type=float, help='Maximum value to map')
-    parser.add_argument('--vmin', default=0.005, type=float, help='Miminum value to map')
-    parser.add_argument('--vlevel', default=0.05, type=float, help='plot contours every vlevel')
-    parser.add_argument('--zlim', default=2, type=float, help='Maximum loss value to show')
+    parser.add_argument('--vmax', default=100, type=float, help='Maximum value to map')
+    parser.add_argument('--vmin', default=0.01, type=float, help='Miminum value to map')
+    parser.add_argument('--vlevel', default=0.5, type=float, help='plot contours every vlevel')
     parser.add_argument('--show', action='store_true', default=False, help='show plots')
 
     args = parser.parse_args()
